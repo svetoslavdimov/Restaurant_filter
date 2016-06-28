@@ -1,0 +1,14 @@
+#filter fieldset {
+	width: 200px;
+	float: left;
+}
+
+#items {
+	padding-top: 20px;
+	clear: left;
+}
+
+#items div {
+	border: 1px dotted silver;
+	margin: 5px 0;
+}
