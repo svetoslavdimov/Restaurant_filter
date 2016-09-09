@@ -11,8 +11,24 @@ class Items {
 	private $db;
 
 	public function build(){
-
-		$data = $this->get();
+		
+		if ($_GET["action"] === "filter") {
+			
+			//$_filter = array();
+			
+			foreach ($_GET as $param => $value) {
+				
+				$filter = explode("_", $param);
+				
+				if ($filter[0] === "filter") {
+					$_filter[] = $filter[1];
+				}
+				
+			}
+			
+		}
+		
+		$data = $this->get($_filter);
 
 		$html = $this->html($data);
 
@@ -20,13 +36,58 @@ class Items {
 
 	}
 
-	private function get(){
+	private function get($filter = false){
+		
+		
 
 		$sql = "SELECT * FROM items WHERE i_delete = 0";
 
 		$items = $this->db->fetch($sql);
+		
+		$_items = array();
+		
+		foreach ($items as $item) {
+			
+			
+			
+			$sql = "
+				SELECT ip_id, p_name, ip_value
+				  FROM items_props AS ip
+			 LEFT JOIN filter_props AS fp ON (ip.ip_prop = fp.p_id)
+			     WHERE p_status = 1
+				   AND ip_item = " . $item[0];
 
-		return $items;
+			$props = $this->db->fetch($sql);
+			
+			$item[] = $props;
+			
+			if ($filter) {
+				
+				$match = false;
+				
+				foreach ($filter as $f) {
+					
+					foreach ($props as $p) {
+						
+						if ($f === $p[0]) {
+							$match = true;
+						}
+						
+					}
+					
+				}
+				
+				if ($match) {
+					$_items[] = $item;
+				}
+				
+			} else {
+				$_items[] = $item;
+			}
+			
+		}
+
+		return $_items;
 
 	}
 
@@ -36,20 +97,18 @@ class Items {
 
 		foreach($data as $item){
 
-			$html .= '<div>' . $item[3];
+			$html .= '<div><h3>' . $item[3] . "</h3><ul>";
 
-			/*foreach($filter["props"] as $prop){
-
-
-				$html .= '<input id="filter_prop_' . $prop[0] . '" type="checkbox" />';
-				$html .= '<label for="filter_prop_' . $prop[0] . '">' . $prop[1] . '</label>';
-				$html .= '<br>';
+			foreach($item[4	] as $prop){
 
 
-			}*/
+				$html .= "<li>" . $prop[1] . ": " . $prop[2] . "</li>";
 
 
-			$html .= '</div>';
+			}
+
+
+			$html .= '</ul></div>';
 
 			//var_dump($filter);
 
@@ -118,9 +177,12 @@ class Filter {
 			$html .= '<legend>' . $filter["name"] . '</legend>';
 
 			foreach($filter["props"] as $prop){
+				
+				//var_dump($_GET);
 
-
-				$html .= '<input id="filter_prop_' . $prop[0] . '" type="checkbox" />';
+				$checked = $_GET["filter_" . $prop[0]] === "on" ? ' checked="true"' : "";
+				
+				$html .= '<input id="filter_prop_' . $prop[0] . '" name="filter_' . $prop[0] . '" type="checkbox"' . $checked . ' />';
 				$html .= '<label for="filter_prop_' . $prop[0] . '">' . $prop[1] . '</label>';
 				$html .= '<br>';
 
