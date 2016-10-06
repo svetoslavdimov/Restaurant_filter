@@ -1,0 +1,23 @@
+.module_container {
+	display: none;
+}
+
+#loading {
+	height: 40px;
+	margin-top: 20px;
+}
+
+
+#addawb_packs input {
+	margin-top: 20px;
+}
+
+form label small { font-weight: normal; font-size: 100%; }
+
+.checkbox label { padding-left: 0; }
+
+.bootstrap-datetimepicker-widget tbody tr:hover td { background-color: #337ab7; color: #fff; }
+
+#awb_week { margin: 5px 0 0 20px; }
+
+#awb-table_wrapper .toolbar { float: left; }
