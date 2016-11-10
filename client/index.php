@@ -1,22 +1,37 @@
 <?
 
+// конфигурационен файл с настройки за цялата система
 include("config.php");
+
+// библиотеката, съдържаща бизнес логиката на приложението
+// има различни по вид функции
 include("lib.php");
 
+// инижиализираме връзка към db
+// прави се нова инстанция на обект DB (от lib/) като се подават настройките от конфигурацията
 $db = new DB($db_settings);
 
+
+// инициализираме Items
 $items = new Items($db);
+
+// инициализираме Filters
 $filter = new Filter($db);
 
-
-
+// генерираме html-а за items § filters
+// по-късни го слагаме в html страницата
 $items_html = $items->build();
 $filter_html = $filter->build();
 
 ?>
 
 <?
-									
+
+// подход за взимане на информация от външен източник
+// взима се съдържанието на страницата за Барове в София - от foursquare.com
+// може да се прави периодично (през 1 час) и да се пълни в локална база данни
+
+
 //$url = "https://foursquare.com/explore?cat=drinks&mode=url&near=Sofia%2C%20Bulgaria&nearGeoId=72057594038654947";
 //$data = file_get_contents($url);
 //echo $data;
@@ -33,7 +48,7 @@ $filter_html = $filter->build();
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Restaurants Filter</title>
-		<link rel="shortcut icon" href="css/images/onlinetrading.ico">
+		<link rel="shortcut icon" href="css/images/favicon.ico">
 		<link rel="stylesheet" href="css/vendors.css">
 		<link rel="stylesheet" href="css/main.css">
 	</head>
@@ -45,7 +60,7 @@ $filter_html = $filter->build();
 						<div class="left_col scroll-view">
 							<div class="navbar nav_title" style="border: 0;">
 								<a href="" class="site_title">
-									<img src="css/images/onlinetrading-logo.png" alt="OnlineTrading.bg">
+									<img src="css/images/logo.png" alt="OnlineTrading.bg">
 									<span>Restaurants Filter</span>
 								</a>
 							</div>
@@ -130,7 +145,7 @@ $filter_html = $filter->build();
 								<ul class="nav navbar-nav navbar-right">
 									<li>
 										<a href="#user" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-											<img src="css/images/onlinetrading-logo.png" alt="OnlineTrading.bg"><?= $user["user"] ?><span class=" fa fa-angle-down"></span>
+											<img src="css/images/logo.png" alt="Restaurant Filter"><?= $user["user"] ?><span class=" fa fa-angle-down"></span>
 										</a>
 										<ul class="dropdown-menu dropdown-usermenu pull-right">
 											<li><a href="#user/profile"><span class="badge bg-red pull-right">66%</span><span>Profile</span></a></li>
@@ -147,7 +162,7 @@ $filter_html = $filter->build();
 											<li>
 												<a>
 													<span class="image"><img src="css/images/onlinetrading-logo.png" alt="Profile Image" /></span>
-													<span><span>OnlineTrading.bg</span><span class="time">3 mins ago</span></span>
+													<span><span>Restaurant Filter</span><span class="time">3 mins ago</span></span>
 													<span class="message">Content updated!</span>
 												</a>
 											</li>
@@ -226,15 +241,14 @@ $filter_html = $filter->build();
 						<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
 						<span class="sr-only">Loading...</span>
 					</div>
-					<div class="pull-right" title="Онлайн Трейдинг - Контролен Панел">
-						Online Trading - Control Panel | <a href="http://www.onlinetrading.bg" title="Онлайн Трейдинг" target="_blank">www.onlinetrading.bg</a>
+					<div class="pull-right" title="Restaurant Filter - Control Panel">
+						Restaurant Filter - Control Panel
 					</div>
 					<div class="clearfix"></div>
 				</footer>
 			</div>
 		</div>
 		<script src="js/vendors.js"></script>
-		<script src="js/pages/dhl_awb.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>
